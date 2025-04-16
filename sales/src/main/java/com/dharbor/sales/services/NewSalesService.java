@@ -20,6 +20,7 @@ public class NewSalesService {
     private final RickMortyApiFeignService rickMortyApiFeignService;
 
     //TODO: Apply circuit breaking and error handling for Wed 4/16/2025
+    //@CircuitBreaker(name = "newSale", fallbackMethod = "newSaleFallback")
     public String newSale(NewSaleDto newSaleDto) {
 
         User user = this.userFeignService.findById(newSaleDto.getUserId());
@@ -36,6 +37,10 @@ public class NewSalesService {
         System.out.println(character.getName() + " " + character.getSpecies() + " " + character.getStatus());
 
         return "New Sale for " + user.getName() + " with reservation id " + reservationId + " and user has been notified " + notification;
+    }
+
+    private String newSaleFallback(NewSaleDto newSaleDto, Throwable throwable) {
+        return "Service is temporarily unavailable. Please try again later.";
     }
 
 }
